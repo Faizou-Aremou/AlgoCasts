@@ -8,6 +8,13 @@
 //   anagrams('RAIL! SAFETY!', 'fairy tales') --> True
 //   anagrams('Hi there', 'Bye there') --> False
 
-function anagrams(stringA, stringB) {}
+export function anagrams(stringA:string, stringB:string):boolean {
+  const reducedSortedStringA = reducedSortedString(stringA);
+  const reducedSortedStringB = reducedSortedString(stringB);
+  return  reducedSortedStringA.join('') === reducedSortedStringB.join('');
+}
 
-module.exports = anagrams;
+
+function reducedSortedString(text:string):string[]{
+return text.replace(/[^\w]/g, "").toLowerCase().split('').sort()
+}
