@@ -16,5 +16,5 @@ export function anagrams(stringA:string, stringB:string):boolean {
 
 
 function reducedSortedString(text:string):string[]{
-return text.replace(/[^\w]/g, "").toLowerCase().split('').sort()
+return text.replace(/[^\w]/g, "").toLowerCase().split('').sort(); // delete spaces;
 }

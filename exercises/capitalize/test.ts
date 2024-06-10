@@ -1,4 +1,5 @@
-const capitalize = require('./index');
+import { capitalize } from './index';
+
 
 test('Capitalize is a function', () => {
   expect(typeof capitalize).toEqual('function');
