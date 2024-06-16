@@ -1,4 +1,4 @@
-const matrix = require('./index');
+import { matrix } from '.';
 
 test('matrix is a function', () => {
   expect(typeof matrix).toEqual('function');
