@@ -14,7 +14,7 @@
 //       ' ### '
 //       '#####'
 
-export function pyramid(n: number): void {
+export function pyramid(n: number): void { //O(7n)
   const steps = pyramidToPrints(n)
     .split('\n')
     .filter((step) => step !== '');

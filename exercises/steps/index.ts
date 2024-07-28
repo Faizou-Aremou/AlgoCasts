@@ -17,7 +17,7 @@
 //       '### '
 //       '####'
 
-export function steps(n: number): void {
+export function steps(n: number): void { // O(2n)
   const steps = stepsToPrints(n).split('\n').filter((step)=> step!=='');
   steps.forEach((step)=> console.log(step));
 }
