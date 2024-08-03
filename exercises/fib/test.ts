@@ -1,4 +1,5 @@
-const fib = require('./index');
+import { fib } from '.';
+
 
 test('Fib function is defined', () => {
   expect(typeof fib).toEqual('function');
