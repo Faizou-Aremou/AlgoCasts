@@ -4,18 +4,19 @@
 // one to be returned) from the queue *without*
 // removing it.
 
-class Queue {
+export class Queue {
+  private data: any[];
   constructor() {
     this.data = [];
   }
 
-  add(record) {
+  add(record: any) {
     this.data.unshift(record);
   }
-
+  peek(): any {
+    return this.data[this.data.length - 1];
+  }
   remove() {
     return this.data.pop();
   }
 }
-
-module.exports = Queue;

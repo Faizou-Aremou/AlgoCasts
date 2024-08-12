@@ -1,9 +1,8 @@
-class Stack {
-  constructor() {
-    this.data = [];
-  }
+export class Stack {
+  data: any[] = [];
+  constructor() {}
 
-  push(record) {
+  push(record: any) {
     this.data.push(record);
   }
 
@@ -15,5 +14,3 @@ class Stack {
     return this.data[this.data.length - 1];
   }
 }
-
-module.exports = Stack;

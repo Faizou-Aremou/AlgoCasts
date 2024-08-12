@@ -1,4 +1,4 @@
-const Queue = require('./index');
+import { Queue } from '.';
 
 test('Queue is a class', () => {
   expect(typeof Queue.prototype.constructor).toEqual('function');

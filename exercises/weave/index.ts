@@ -22,8 +22,31 @@
 //    q.remove() // 2
 //    q.remove() // 'There'
 
-const Queue = require('./queue');
+import { Queue } from './queue';
 
-function weave(sourceOne, sourceTwo) {}
-
-module.exports = weave;
+export function weave(sourceOne: Queue, sourceTwo: Queue): Queue {
+  const queue = new Queue();
+  while (!!sourceOne.peek() || !!sourceTwo.peek()) {
+    const datum1 = sourceOne.remove();
+    const datum2 = sourceTwo.remove();
+    queue.add(datum1);
+    queue.add(datum2);
+  }
+  const remainQueue = queueWithData(sourceOne, sourceTwo);
+  if (!!remainQueue?.peek()) {
+    transferDataFormQueue(remainQueue, queue);
+  }
+  return queue;
+}
+function transferDataFormQueue(sourceOne: Queue, queue: Queue) {
+  while (!!sourceOne.peek()) {
+    const datum1 = sourceOne.remove();
+    queue.add(datum1);
+  }
+}
+function queueWithData(sourceOne: Queue, sourceTwo: Queue): Queue | undefined {
+  if (!sourceOne.peek()) {
+    return !!sourceTwo.peek() ? sourceTwo : undefined;
+  }
+  return sourceOne;
+}

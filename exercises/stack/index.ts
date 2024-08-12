@@ -10,6 +10,16 @@
 //   s.pop(); // returns 2
 //   s.pop(); // returns 1
 
-class Stack {}
+export class Stack {
+  private data: any[] = [];
 
-module.exports = Stack;
+  push(datum: any) {
+    this.data.push(datum);
+  }
+  pop() {
+    return this.data.pop();
+  }
+  peek() {
+    return this.data[this.data.length - 1];
+  }
+}
