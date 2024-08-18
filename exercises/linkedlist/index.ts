@@ -3,23 +3,10 @@
 // See 'directions' document
 
 export class Node<T = unknown, U = unknown> {
-  private _data: T;
-  private _next: Node<U> | null = null;
-  get data() {
-    return this._data;
-  }
-  get next() {
-    return this._next;
-  }
-  set data(data: T) {
-    this._data = data;
-  }
-  set next(next: Node<U> | null) {
-    this._next = next;
-  }
-  constructor(data: T, next: Node<U> | null = null) {
-    this._data = data;
-    this._next = next;
+  next: Node<U, unknown> | null;
+
+  constructor(public data: T, next: Node<U> | null = null) {
+    this.next = next;
   }
 }
 
@@ -73,6 +60,39 @@ export class LinkedList {
     this.head = this.insertAtLinkedList(data, index, this.head);
   }
 
+  forEach(fn: (node: Node) => void): void {
+    this.forEachLinkedList(fn, this.head);
+  }
+
+  [Symbol.iterator]() {
+    let currentNode = this.head;
+    return {
+      next(){
+        if(!!currentNode){
+          const result = currentNode
+          currentNode = currentNode.next
+          return {value:result, done:false}
+        }
+        return {value: currentNode, done:true}
+      }
+    };
+  }
+  /**
+   * forEachLinkedList(fn, null) = void
+   * forEachLinkedList(fn, node) = fn(node) && forEachLinkedList(fn, node.next)
+   *
+   * @param fn
+   * @param node
+   */
+  private forEachLinkedList(
+    fn: (node: Node) => void,
+    node: Node<unknown, unknown> | null
+  ): void {
+    if (node === null) {
+      return;
+    }
+    this.forEachLinkedList(fn, node.next);
+  }
   /**
    * insertAtLinkedList(data,0,node)= Node(data).next = node
    * insertAtLinkedList(data,n,null)= Node(data)
@@ -91,7 +111,9 @@ export class LinkedList {
       return new Node(data);
     }
     if (index === 0) {
-      new Node(data).next = node;
+      const rNode = new Node(data);
+      rNode.next = node;
+      return rNode;
     }
     const concatNode = (restNode: Node | null) => {
       node.next = restNode;
@@ -177,12 +199,11 @@ export class LinkedList {
 
   /**
    * removeFirstLinkedList(null) = null
-   * removeFirstLinkedList(isTail(node)) = null
    * removeFirstLinkedList(node) = node.next
    * @param head
    */
   private removedFirstLinkedList(node: Node<unknown, unknown> | null) {
-    if (node === null || this.isTail(node)) {
+    if (node === null) {
       return node;
     }
     return node.next;
