@@ -1,4 +1,4 @@
-const L = require('./index');
+import * as L from './index';
 const List = L.LinkedList;
 const Node = L.Node;
 
@@ -12,7 +12,7 @@ test('Node is a class', () => {
 
 describe.skip('A Node', () => {
   test('has properties "data" and "next"', () => {
-    const node = new Node('a', 'b');
+    const node = new Node('a', new Node('b'));
     expect(node.data).toEqual('a');
     expect(node.next).toEqual('b');
   });
@@ -22,9 +22,9 @@ describe.skip('Insert First', () => {
   test('appends a node to the start of the list', () => {
     const l = new List();
     l.insertFirst(1);
-    expect(l.head.data).toEqual(1);
+    expect(l.head?.data).toEqual(1);
     l.insertFirst(2);
-    expect(l.head.data).toEqual(2);
+    expect(l.head?.data).toEqual(2);
   });
 });
 
@@ -44,9 +44,9 @@ describe.skip('GetFirst', () => {
   test('returns the first element', () => {
     const l = new List();
     l.insertFirst(1);
-    expect(l.getFirst().data).toEqual(1);
+    expect(l.getFirst()?.data).toEqual(1);
     l.insertFirst(2);
-    expect(l.getFirst().data).toEqual(2);
+    expect(l.getFirst()?.data).toEqual(2);
   });
 });
 
@@ -90,10 +90,10 @@ describe.skip('RemoveFirst', () => {
     l.insertFirst('a');
     l.removeFirst();
     expect(l.size()).toEqual(2);
-    expect(l.getFirst().data).toEqual('b');
+    expect(l.getFirst()?.data).toEqual('b');
     l.removeFirst();
     expect(l.size()).toEqual(1);
-    expect(l.getFirst().data).toEqual('c');
+    expect(l.getFirst()?.data).toEqual('c');
   });
 });
 
@@ -120,7 +120,7 @@ describe.skip('RemoveLast', () => {
     l.removeLast();
 
     expect(l.size()).toEqual(1);
-    expect(l.head.data).toEqual('a');
+    expect(l.head?.data).toEqual('a');
   });
 
   test('RemoveLast removes the last node when list is length 3', () => {
