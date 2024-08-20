@@ -13,11 +13,7 @@ export class Node<T = unknown, U = unknown> {
 export class LinkedList {
   head: Node | null = null;
   insertFirst(data: unknown): void {
-    if (this.head !== null) {
       this.head = new Node(data, this.head);
-    } else {
-      this.head = new Node(data, null);
-    }
   }
   size(): number {
     return this.linkedListSize(this.head);
@@ -91,6 +87,7 @@ export class LinkedList {
     if (node === null) {
       return;
     }
+    fn(node);
     this.forEachLinkedList(fn, node.next);
   }
   /**
@@ -176,7 +173,7 @@ export class LinkedList {
     if (node === null || this.isTail(node)) {
       return null;
     }
-    return this.removedLast(node);
+    return this.concreteRemovedLast(node);
   }
   /**
    * removedLast(isTail(node.next)) = node
@@ -185,7 +182,7 @@ export class LinkedList {
    * @param node
    * @returns
    */
-  private removedLast(node: Node<unknown, unknown>): Node<unknown, unknown> {
+  private concreteRemovedLast(node: Node<unknown, unknown>): Node<unknown, unknown> {
     if (this.isTail(node.next as Node<unknown, unknown>)) {
       node.next = null;
       return node;
@@ -194,7 +191,7 @@ export class LinkedList {
       node.next = rNode;
       return node;
     };
-    return result(this.removedLast(node.next as Node<unknown, unknown>));
+    return result(this.concreteRemovedLast(node.next as Node<unknown, unknown>));
   }
 
   /**
@@ -224,7 +221,7 @@ export class LinkedList {
   /**
    * linkedListSize(null) = 0
    * linkedListSize(isTail(node)) = 1
-   * linkedListSize(node) = 1 + con linkedListSize(node.next)
+   * linkedListSize(node) = 1 + soit con = linkedListSize(node.next) dans 1+ con
    * @param node
    */
   private linkedListSize(node: Node<unknown, unknown> | null): number {
@@ -233,8 +230,8 @@ export class LinkedList {
     } else if (this.isTail(node)) {
       return 1;
     }
-    const add = (size: number) => {
-      return 1 + size;
+    const add = (prevNodeSize: number) => {
+      return 1 + prevNodeSize;
     };
     return add(this.linkedListSize(node.next));
   }
