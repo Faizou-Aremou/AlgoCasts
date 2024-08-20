@@ -2,4 +2,4 @@
 
   Companion repo to [The Coding Inteview Bootcamp: Algorithms + Data Structures](https://www.udemy.com/course/coding-interview-bootcamp-algorithms-and-data-structure/)
 
-  I also add some additional exercises and use typeScrip instead of js.
+  I also add some additional exercises and use typeScript instead of js.
