@@ -13,7 +13,7 @@ export class Node<T = unknown, U = unknown> {
 export class LinkedList {
   head: Node | null = null;
   insertFirst(data: unknown): void {
-      this.head = new Node(data, this.head);
+    this.head = new Node(data, this.head);
   }
   size(): number {
     return this.linkedListSize(this.head);
@@ -60,18 +60,12 @@ export class LinkedList {
     this.forEachLinkedList(fn, this.head);
   }
 
-  [Symbol.iterator]() {
-    let currentNode = this.head;
-    return {
-      next(){
-        if(!!currentNode){
-          const result = currentNode
-          currentNode = currentNode.next
-          return {value:result, done:false}
-        }
-        return {value: currentNode, done:true}
-      }
-    };
+  *[Symbol.iterator]() {
+    let node = this.head;
+    while (node !== null) {
+      yield node;
+      node = node.next;
+    }
   }
   /**
    * forEachLinkedList(fn, null) = void
@@ -182,7 +176,9 @@ export class LinkedList {
    * @param node
    * @returns
    */
-  private concreteRemovedLast(node: Node<unknown, unknown>): Node<unknown, unknown> {
+  private concreteRemovedLast(
+    node: Node<unknown, unknown>
+  ): Node<unknown, unknown> {
     if (this.isTail(node.next as Node<unknown, unknown>)) {
       node.next = null;
       return node;
@@ -191,7 +187,9 @@ export class LinkedList {
       node.next = rNode;
       return node;
     };
-    return result(this.concreteRemovedLast(node.next as Node<unknown, unknown>));
+    return result(
+      this.concreteRemovedLast(node.next as Node<unknown, unknown>)
+    );
   }
 
   /**
