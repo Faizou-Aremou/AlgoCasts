@@ -11,7 +11,21 @@
 //   l.insertLast('b')
 //   l.insertLast('c')
 //   midpoint(l); // returns { data: 'b' }
+import { LinkedList, Node } from './linkedlist';
+/**
+ *
+ * @param list
+ */
+export function midpoint(list: LinkedList):Node {
+  let slow: Node = list.getFirst();
+  let fast: Node = list.getFirst();
 
-function midpoint(list) {}
-
-module.exports = midpoint;
+  while (fastNodeCanBeReach(fast)) {
+    fast = fast.next.next; 
+    slow = slow.next;
+  }
+  return slow;
+}
+function fastNodeCanBeReach(node: Node): boolean {
+  return node.next?.next !== null && node.next?.next !== undefined;
+}

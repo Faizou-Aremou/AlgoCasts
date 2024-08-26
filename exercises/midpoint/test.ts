@@ -1,5 +1,5 @@
-const midpoint = require('./index');
-const L = require('./linkedlist');
+import  {midpoint} from './index';
+import * as L from './linkedlist';
 const Node = L.Node;
 const LinkedList = L.LinkedList;
 
