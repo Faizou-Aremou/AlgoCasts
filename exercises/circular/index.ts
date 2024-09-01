@@ -15,13 +15,19 @@
 import { LinkedList, Node } from './linkedlist';
 
 export function circular(list: LinkedList) {
-  const first = list.head?.next ?? null;
-  return first !== null && isCircular(first.next, first);
+  const fast: any = list.head?.next?.next ?? null;
+  const slow: any = list.head?.next ?? null;
+  return isCircular(slow, fast);
 }
 /**
  * isCircular(null, jalon) = false;
- * isCircular(node, jalon) = node === jalon || isCircular(node.next, jalon)
+ * isCircular(node, jalon)= const fast = node.next.next et fast === node.next  isCircular(node)
  */
-export function isCircular(node: Node, jalon: Node = node.next): boolean {
-  return node === jalon || (node.next !== null && isCircular(node.next, jalon));
+export function isCircular(node: Node, fastNode: Node): boolean {
+  const fast: any = fastNode?.next?.next ?? null;
+  const slow: any = node?.next ?? null;
+  if (node === null && fastNode === null) {
+    return false;
+  }
+  return node === fastNode || isCircular(slow, fast);
 }
