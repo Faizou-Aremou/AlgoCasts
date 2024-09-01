@@ -1,11 +1,14 @@
-class Node {
-  constructor(data, next = null) {
+export class Node {
+  data: any;
+  next: any | null;
+  constructor(data: any, next = null) {
     this.data = data;
     this.next = next;
   }
 }
 
-class LinkedList {
+export class LinkedList {
+  head: any | null;
   constructor(values = []) {
     this.head = null;
 
@@ -30,7 +33,7 @@ class LinkedList {
     return counter;
   }
 
-  getAt(index) {
+  getAt(index:number) {
     if (!this.head) {
       return null;
     }
@@ -47,7 +50,7 @@ class LinkedList {
     return null;
   }
 
-  insertAt(data, index) {
+  insertAt(data:any, index:number) {
     if (!this.head) {
       this.head = new Node(data);
       return;
@@ -101,7 +104,7 @@ class LinkedList {
     previous.next = null;
   }
 
-  removeAt(index) {
+  removeAt(index:number) {
     if (!this.head) {
       return;
     }
@@ -125,7 +128,7 @@ class LinkedList {
     return this.head;
   }
 
-  insertFirst(data) {
+  insertFirst(data:any) {
     this.head = new Node(data, this.getFirst());
   }
 
@@ -142,7 +145,7 @@ class LinkedList {
     return node;
   }
 
-  insertLast(data) {
+  insertLast(data:any) {
     const last = this.getLast();
 
     if (last) {
@@ -154,7 +157,7 @@ class LinkedList {
     }
   }
 
-  forEach(fn) {
+  forEach(fn:any) {
     if (!this.head) {
       return null;
     }
@@ -174,5 +177,3 @@ class LinkedList {
     }
   }
 }
-
-module.exports = { Node, LinkedList };
