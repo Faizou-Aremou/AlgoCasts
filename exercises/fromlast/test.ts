@@ -1,5 +1,5 @@
-const fromLast = require('./index');
-const L = require('./linkedlist');
+import { fromLast } from '.';
+import * as L from'./linkedlist';
 const List = L.LinkedList;
 const Node = L.Node;
 
@@ -16,5 +16,5 @@ test('fromLast returns the node n elements from the end', () => {
   l.insertLast('d');
   l.insertLast('e');
 
-  expect(fromLast(l, 3).data).toEqual('b');
+  expect(fromLast(l, 3)?.data).toEqual('b');
 });
