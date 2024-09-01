@@ -1,7 +1,4 @@
-const T = require('./index');
-const Node = T.Node;
-const Tree = T.Tree;
-
+import {Node, Tree} from '.'
 describe('Node', () => {
   test('Node is a constructor', () => {
     expect(typeof Node.prototype.constructor).toEqual('function');
@@ -29,14 +26,14 @@ describe('Node', () => {
   });
 });
 
-describe.skip('Tree', () => {
+describe('Tree', () => {
   test('starts empty', () => {
     const t = new Tree();
     expect(t.root).toEqual(null);
   });
 
   test('Can traverse bf', () => {
-    const letters = [];
+    const letters:string[] = [];
     const t = new Tree();
     t.root = new Node('a');
     t.root.add('b');
@@ -51,7 +48,7 @@ describe.skip('Tree', () => {
   });
 
   test('Can traverse DF', () => {
-    const letters = [];
+    const letters:string[] = [];
     const t = new Tree();
     t.root = new Node('a');
     t.root.add('b');
