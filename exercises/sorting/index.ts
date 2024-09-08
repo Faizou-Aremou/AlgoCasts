@@ -38,10 +38,39 @@ export function bubbleSort<T>(arr: T[]): T[] {
   return [];
 }
 
+/**
+ * selectionSort([]) = []
+ * selectionSort(e°S) = soit <max,rest> = Max(e°S)
+ *                                selectionSort(S°e)°max
+ * Max([e1,e2]) = e1 > e2 alors <e1,[e2]> sinon <e2,[e1]>
+ * Max([e1]) = <e1,[]>
+ * Max(e°S) = soit <max, rest> = Max(S);
+ *                 e > max alors <e, rest°max> sinon <max, rest°e>
+ *
+ * @param arr
+ * @returns
+ */
 export function selectionSort<T>(arr: T[]): T[] {
-  return [];
+  if (arr.length === 0) {
+    return [];
+  }
+  const result = ([max, rest]: [T, T[]]) => {
+    return [...selectionSort(rest), max];
+  };
+  return result(max(arr));
 }
-
+function max<T>(arr: T[]): [T, T[]] {
+  if (arr.length === 2) {
+    return arr[0] > arr[1] ? [arr[0], [arr[1]]] : [arr[1], [arr[0]]];
+  }
+  if (arr.length === 1) {
+    return [arr[0], []];
+  }
+  const result = ([max, rest]: [T, T[]]): [T, T[]] => {
+    return arr[0] > max ? [arr[0], [...rest, max]] : [max, [...rest, arr[0]]];
+  };
+  return result(max(arr.slice(1)));
+}
 /**
  * tri fusion ou tri par interclassement en francais
  * utilisé dans JavaScript Array.sort
@@ -72,7 +101,7 @@ export function merge<T>(
   sortFn: (left: T, right: T) => boolean = isInf,
   left: any,
   right: any
-):T[] {
+): T[] {
   if (left.length === 0 && right.length === 0) {
     return [];
   }
@@ -98,7 +127,6 @@ function slipInTwoPart<T>(sequence: T[]): [T[], T[]] {
     embelishSlipInTwo(sequence);
   return [sequencePart1, sequencePart2];
 }
-
 
 export function embelishSlipInTwo<T>(sequence: T[]): {
   sequencePart1: T[];
