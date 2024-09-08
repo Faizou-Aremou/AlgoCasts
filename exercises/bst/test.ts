@@ -1,5 +1,4 @@
-const Node = require('./index');
-
+import { Node } from '.';
 test('Node is a constructor', () => {
   expect(typeof Node.prototype.constructor).toEqual('function');
 });
@@ -10,9 +9,9 @@ test('Node can insert correctly', () => {
   node.insert(15);
   node.insert(17);
 
-  expect(node.left.data).toEqual(5);
-  expect(node.right.data).toEqual(15);
-  expect(node.right.right.data).toEqual(17);
+  expect(node.left?.data).toEqual(5);
+  expect(node.right?.data).toEqual(15);
+  expect(node.right?.right?.data).toEqual(17);
 });
 
 test('Contains returns node with the same data', () => {
@@ -23,8 +22,7 @@ test('Contains returns node with the same data', () => {
   node.insert(0);
   node.insert(-5);
   node.insert(3);
-
-  const three = node.left.left.right;
+  const three = node.left?.left?.right;
   expect(node.contains(3)).toEqual(three);
 });
 
