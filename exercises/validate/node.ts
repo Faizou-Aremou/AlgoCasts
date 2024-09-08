@@ -1,11 +1,14 @@
-class Node {
-  constructor(data) {
+export class Node {
+  data: any;
+  left: any;
+  right: any;
+  constructor(data:any) {
     this.data = data;
     this.left = null;
     this.right = null;
   }
 
-  insert(data) {
+  insert(data: any) {
     if (data < this.data && this.left) {
       this.left.insert(data);
     } else if (data < this.data) {
@@ -17,5 +20,3 @@ class Node {
     }
   }
 }
-
-module.exports = Node;
