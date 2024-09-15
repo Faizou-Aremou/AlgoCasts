@@ -2,9 +2,6 @@
 // Implement bubbleSort, selectionSort, and mergeSort
 
 import { head, isEmpty, prepend, tail } from 'ramda';
-function isInf<T>(element1: T, element2: T): boolean {
-  return element1 <= element2;
-}
 /**
  * insertionSort:: [T], fn -> [T]
  */
@@ -34,14 +31,43 @@ export function insertion<T>(
         : [head(list) as T, ...insertion(isSup, tail(list), element)];
   }
 }
+/**
+ * implémentation naif de bubble sort, normalement, la fonction de comparaison doit être fourni à la fonction en paramètres
+ *
+ * bubbleSort([]) = []
+ * bubbleSort([e]) = [e]
+ * bubbleSort([]) = []
+ * bubbleSort(e1°e2°S) = soit S°e = bubbleComp(e1°e2°S)
+ *                      dans bubbleSort(S)°e
+ * bubbleCom(e1°e2°S) = soit [t1, t2] = sorted(e1,e2)
+ *                         dans [t1, bubbleSort(t2°S)]
+ * @param arr
+ * @returns
+ */
 export function bubbleSort<T>(arr: T[]): T[] {
-  return [];
+  if (arr.length === 0 || arr.length === 1) {
+    return arr;
+  }
+  const soitDans = (list: T[]) => {
+    return [...bubbleSort([...list.slice(0, -1)]), ...list.slice(-1)];
+  };
+  return soitDans(bubbleComp<T>(arr));
+}
+function bubbleComp<T>(arr: T[]): T[] {
+  if (arr.length === 0 || arr.length === 1) {
+    return arr;
+  }
+  const soitDans = ([el1, el2]: [T, T]) => {
+    return [el1, ...bubbleComp([el2, ...arr.slice(2)])];
+  };
+  return soitDans(sort(arr.slice(0, 2) as [T, T]));
 }
 
 /**
+ * Selection Sort en francais tri par recherche du maximun
  * selectionSort([]) = []
  * selectionSort(e°S) = soit <max,rest> = Max(e°S)
- *                                selectionSort(S°e)°max
+ *                              dans   selectionSort(S°e)°max
  * Max([e1,e2]) = e1 > e2 alors <e1,[e2]> sinon <e2,[e1]>
  * Max([e1]) = <e1,[]>
  * Max(e°S) = soit <max, rest> = Max(S);
@@ -59,18 +85,7 @@ export function selectionSort<T>(arr: T[]): T[] {
   };
   return result(max(arr));
 }
-function max<T>(arr: T[]): [T, T[]] {
-  if (arr.length === 2) {
-    return arr[0] > arr[1] ? [arr[0], [arr[1]]] : [arr[1], [arr[0]]];
-  }
-  if (arr.length === 1) {
-    return [arr[0], []];
-  }
-  const result = ([max, rest]: [T, T[]]): [T, T[]] => {
-    return arr[0] > max ? [arr[0], [...rest, max]] : [max, [...rest, arr[0]]];
-  };
-  return result(max(arr.slice(1)));
-}
+
 /**
  * tri fusion ou tri par interclassement en francais
  * utilisé dans JavaScript Array.sort
@@ -122,12 +137,6 @@ export function merge<T>(
     : prepend(head(right) as T, merge(sortFn, left, tail(right)));
 }
 
-function slipInTwoPart<T>(sequence: T[]): [T[], T[]] {
-  const { sequencePart1, sequencePart2, halfOfSequenceSize, sequenceSize } =
-    embelishSlipInTwo(sequence);
-  return [sequencePart1, sequencePart2];
-}
-
 export function embelishSlipInTwo<T>(sequence: T[]): {
   sequencePart1: T[];
   sequencePart2: T[];
@@ -176,4 +185,33 @@ export function embelishSlipInTwo<T>(sequence: T[]): {
       }
     }
   }
+}
+
+function isInf<T>(element1: T, element2: T): boolean {
+  return element1 <= element2;
+}
+function max<T>(arr: T[]): [T, T[]] {
+  if (arr.length === 2) {
+    return arr[0] > arr[1] ? [arr[0], [arr[1]]] : [arr[1], [arr[0]]];
+  }
+  if (arr.length === 1) {
+    return [arr[0], []];
+  }
+  const result = ([max, rest]: [T, T[]]): [T, T[]] => {
+    return arr[0] > max ? [arr[0], [...rest, max]] : [max, [...rest, arr[0]]];
+  };
+  return result(max(arr.slice(1)));
+}
+function slipInTwoPart<T>(sequence: T[]): [T[], T[]] {
+  const { sequencePart1, sequencePart2, halfOfSequenceSize, sequenceSize } =
+    embelishSlipInTwo(sequence);
+  return [sequencePart1, sequencePart2];
+}
+
+/**
+ * naive implementation de sort
+ * @param param0
+ */
+function sort<T>([e1, e2]: [T, T]): [T, T] {
+  return e1 > e2 ? [e2, e1] : [e1, e2];
 }
