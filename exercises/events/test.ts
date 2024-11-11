@@ -1,4 +1,4 @@
-import { Events } from '.';
+import { Events } from './index';
 
 test('Events can be registered then triggered', () => {
   const events = new Events();
