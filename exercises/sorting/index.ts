@@ -1,7 +1,7 @@
 // --- Directions
 // Implement bubbleSort, selectionSort, and mergeSort
-
 import { head, isEmpty, prepend, tail } from 'ramda';
+
 /**
  * insertionSort:: [T], fn -> [T]
  */
@@ -167,7 +167,7 @@ export function embelishSlipInTwo<T>(sequence: T[]): {
       };
     default: {
       const { sequencePart1, sequencePart2, halfOfSequenceSize, sequenceSize } =
-        embelishSlipInTwo(tail(sequence));
+        embelishSlipInTwo<T>(tail(sequence));
       if ((sequenceSize + 1) % 2 === 0) {
         return {
           sequencePart1: prepend(head(sequence) as T, sequencePart1),

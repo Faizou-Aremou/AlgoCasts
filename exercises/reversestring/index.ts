@@ -6,12 +6,9 @@
 //   reverse('hello') === 'olleh'
 //   reverse('Greetings!') === '!sgniteerG'
 
-import { init, isEmpty, last, prepend, tail } from 'ramda';
-
 export function reverse(str: string): string {
   return str.split('').reverse().join('');
 }
-
 
 // /**
 //  *
