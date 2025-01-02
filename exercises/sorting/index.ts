@@ -1,6 +1,6 @@
 // --- Directions
 // Implement bubbleSort, selectionSort, and mergeSort
-import { head, isEmpty, prepend, tail } from 'ramda';
+import { append, head, init, isEmpty, last, prepend, tail } from 'ramda';
 
 /**
  * insertionSort:: [T], fn -> [T]
@@ -85,7 +85,18 @@ export function selectionSort<T>(arr: T[]): T[] {
   };
   return result(max(arr));
 }
-
+function max<T>(arr: T[]): [T, T[]] {
+  if (arr.length === 2) {
+    return arr[0] > arr[1] ? [arr[0], [arr[1]]] : [arr[1], [arr[0]]];
+  }
+  if (arr.length === 1) {
+    return [arr[0], []];
+  }
+  const result = ([max, rest]: [T, T[]]): [T, T[]] => {
+    return arr[0] > max ? [arr[0], [...rest, max]] : [max, [...rest, arr[0]]];
+  };
+  return result(max(arr.slice(1)));
+}
 /**
  * tri fusion ou tri par interclassement en francais
  * utilisé dans JavaScript Array.sort
@@ -93,8 +104,8 @@ export function selectionSort<T>(arr: T[]): T[] {
  * @returns
  */
 export function mergeSort<T>(
-  sortFn: (left: T, right: T) => boolean = isInf,
-  sequence: T[]
+  sequence: T[],
+  sortFn: (left: T, right: T) => boolean = numericLikeIsInf
 ): T[] {
   switch (sequence.length) {
     case 0:
@@ -104,18 +115,23 @@ export function mergeSort<T>(
     default: {
       const [sequence1, sequence2] = slipInTwoPart(sequence);
       return merge(
-        sortFn,
-        mergeSort(sortFn, sequence1),
-        mergeSort(sortFn, sequence2)
+        mergeSort(sequence1, sortFn),
+        mergeSort(sequence2, sortFn),
+        sortFn
       );
     }
   }
 }
+function slipInTwoPart<T>(sequence: T[]): [T[], T[]] {
+  const { sequencePart1, sequencePart2, halfOfSequenceSize, sequenceSize } =
+    embelishSlipInTwo(sequence);
+  return [sequencePart1, sequencePart2];
+}
 
 export function merge<T>(
-  sortFn: (left: T, right: T) => boolean = isInf,
-  left: any,
-  right: any
+  left: T[],
+  right: T[],
+  sortFn: (left: T, right: T) => boolean = numericLikeIsInf
 ): T[] {
   if (left.length === 0 && right.length === 0) {
     return [];
@@ -133,8 +149,8 @@ export function merge<T>(
   }
 
   return (head(left) as T) <= (head(right) as T)
-    ? prepend(head(left) as T, merge(sortFn, tail(left), right))
-    : prepend(head(right) as T, merge(sortFn, left, tail(right)));
+    ? prepend(head(left) as T, merge(tail(left), right, sortFn))
+    : prepend(head(right) as T, merge(left, tail(right), sortFn));
 }
 
 export function embelishSlipInTwo<T>(sequence: T[]): {
@@ -186,26 +202,73 @@ export function embelishSlipInTwo<T>(sequence: T[]): {
     }
   }
 }
-
-function isInf<T>(element1: T, element2: T): boolean {
-  return element1 <= element2;
-}
-function max<T>(arr: T[]): [T, T[]] {
-  if (arr.length === 2) {
-    return arr[0] > arr[1] ? [arr[0], [arr[1]]] : [arr[1], [arr[0]]];
+/**
+ * Permutation ordonnée d'une séquence: Tri par interclassement
+ * Solution fonctionnelle recursif issue de "11.3 Etude du d'un algorithme de tri recursif", a) solution fonctionnelle, page 256/257.
+ */
+export function POitc<T>(
+  sequence: T[],
+  isInf: (left: T, right: T) => boolean = numericLikeIsInf
+): T[] {
+  if (isEmpty(sequence)) {
+    return [];
   }
-  if (arr.length === 1) {
-    return [arr[0], []];
+  if (sequence.length === 1) {
+    return sequence;
   }
-  const result = ([max, rest]: [T, T[]]): [T, T[]] => {
-    return arr[0] > max ? [arr[0], [...rest, max]] : [max, [...rest, arr[0]]];
+  const isIn = ([sequence1, sequence2]: [T[], T[]]) => {
+    return interClassification(POitc(sequence1), POitc(sequence2), isInf);
   };
-  return result(max(arr.slice(1)));
+  return isIn(bothParts(sequence, isInf));
 }
-function slipInTwoPart<T>(sequence: T[]): [T[], T[]] {
-  const { sequencePart1, sequencePart2, halfOfSequenceSize, sequenceSize } =
-    embelishSlipInTwo(sequence);
-  return [sequencePart1, sequencePart2];
+function bothParts<T>(
+  sequence: T[],
+  isInf: (left: T, right: T) => boolean
+): [T[], T[]] {
+  switch (sequence.length) {
+    case 0:
+      return [[], []];
+    case 1:
+      return [sequence, []];
+    default: {
+      const isIn = (first: T, middle: T[], last: T): [T[], T[]] => {
+        const isIn = ([sequence1, sequence2]: [T[], T[]]): [T[], T[]] => [
+          prepend(first, sequence1) as T[],
+          [...sequence2, last],
+        ];
+        return isIn(bothParts(middle, isInf));
+      };
+      return isIn(
+        head(sequence) as T,
+        tail(init(sequence)),
+        last(sequence) as T
+      );
+    }
+  }
+}
+
+function interClassification<T>(
+  sequence1: T[],
+  sequence2: T[],
+  isInf: (left: T, right: T) => boolean
+): T[] {
+  if (isEmpty(sequence1) || isEmpty(sequence2)) {
+    return [...sequence1, ...sequence2];
+  }
+  const isIn = (last1: T, init1: T[], last2: T, init2: T[]) =>
+    isInf(last1, last2)
+      ? [...interClassification(sequence1, init2, isInf), last2]
+      : [...interClassification(sequence2, init1, isInf), last1];
+  return isIn(
+    last(sequence1) as T,
+    init(sequence1),
+    last(sequence2) as T,
+    init(sequence2)
+  );
+}
+
+function numericLikeIsInf<T>(element1: T, element2: T): boolean {
+  return element1 <= element2;
 }
 
 /**
