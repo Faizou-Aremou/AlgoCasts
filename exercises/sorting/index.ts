@@ -4,6 +4,7 @@ import { append, head, init, isEmpty, last, prepend, tail } from 'ramda';
 
 /**
  * insertionSort:: [T], fn -> [T]
+ * tri par insertion; Algorithme de tri populaire; Cependant c'est un algorithme de tri très lent; complexité asymptotique est quadratique
  */
 
 export function insertionSort<T>(
@@ -33,6 +34,8 @@ export function insertion<T>(
 }
 /**
  * implémentation naif de bubble sort, normalement, la fonction de comparaison doit être fourni à la fonction en paramètres
+ *
+ * c'est l'un des algo les plus lent, et il n'est donc guère utilisé en pratique
  *
  * bubbleSort([]) = []
  * bubbleSort([e]) = [e]
@@ -64,7 +67,7 @@ function bubbleComp<T>(arr: T[]): T[] {
 }
 
 /**
- * Selection Sort en francais tri par recherche du maximun
+ * Selection Sort en francais tri par recherche du maximun:  Cet algorithme est simple, mais considéré comme inefficace car il s'exécute en temps quadratique
  * selectionSort([]) = []
  * selectionSort(e°S) = soit <max,rest> = Max(e°S)
  *                              dans   selectionSort(S°e)°max
@@ -98,7 +101,7 @@ function max<T>(arr: T[]): [T, T[]] {
   return result(max(arr.slice(1)));
 }
 /**
- * tri fusion ou tri par interclassement en francais
+ * tri fusion ou tri par interclassement en francais; algo très rapide
  * utilisé dans JavaScript Array.sort
  * @param sequence
  * @returns
@@ -203,7 +206,7 @@ export function embelishSlipInTwo<T>(sequence: T[]): {
   }
 }
 /**
- * Permutation ordonnée d'une séquence: Tri par interclassement
+ * Permutation ordonnée d'une séquence: Tri par interclassement ou par fusion
  * Solution fonctionnelle recursif issue de "11.3 Etude du d'un algorithme de tri recursif", a) solution fonctionnelle, page 256/257.
  */
 export function POitc<T>(
@@ -277,4 +280,54 @@ function numericLikeIsInf<T>(element1: T, element2: T): boolean {
  */
 function sort<T>([e1, e2]: [T, T]): [T, T] {
   return e1 > e2 ? [e2, e1] : [e1, e2];
+}
+
+export function mergeSortInArray<T>(array: T[]) {
+  let tempArray: T[] = [];
+  /**
+   * Tri interclassement sur les tableaux
+   * Solution actionnelle recursif issue de "11.3 Etude du d'un algorithme de tri recursif", a) page 257/258.
+   */
+  function TrierLtc([inf, sup]: [number, number]) {
+    let m: number;
+    if (inf < sup) {
+      m = (inf + sup) / 2;
+      TrierLtc([inf, m]);
+      TrierLtc([m + 1, sup]);
+      interArrayClassification([inf, m], [m + 1, sup]);
+    }
+  }
+
+  function interArrayClassification(
+    [a, b]: [number, number],
+    [c, d]: [number, number]
+  ): void {
+    let i1: number, i2: number;
+    let k: number;
+    i1 = a;
+    i2 = c;
+    k = a;
+    while (i1 < b && i2 < d) {
+      if (array[i1] <= array[i2]) {
+        tempArray[k] = array[i1];
+        i1 += 1;
+      } else {
+        tempArray[k] = array[i2];
+        i2 += 1;
+      }
+      k += 1;
+    }
+
+    for (let i = i1; i <= b; i++) {
+      tempArray[k] = array[i];
+    }
+
+    for (let i = i2; i <= d; i++) {
+      tempArray[k] = array[i];
+    }
+    tempArray.forEach((el, index) => {
+      array[index] = el;
+    });
+  }
+  TrierLtc([0, array.length - 1]);
 }
