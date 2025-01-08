@@ -291,7 +291,8 @@ export function mergeSortInArray<T>(array: T[]) {
   function TrierLtc([inf, sup]: [number, number]) {
     let m: number;
     if (inf < sup) {
-      m = (inf + sup) / 2;
+      const somme = inf + sup;
+      m = somme % 2 === 0 ? somme / 2 : (somme - 1) / 2;
       TrierLtc([inf, m]);
       TrierLtc([m + 1, sup]);
       interArrayClassification([inf, m], [m + 1, sup]);
@@ -307,7 +308,7 @@ export function mergeSortInArray<T>(array: T[]) {
     i1 = a;
     i2 = c;
     k = a;
-    while (i1 < b && i2 < d) {
+    while (i1 <= b && i2 <= d) {
       if (array[i1] <= array[i2]) {
         tempArray[k] = array[i1];
         i1 += 1;
@@ -320,10 +321,12 @@ export function mergeSortInArray<T>(array: T[]) {
 
     for (let i = i1; i <= b; i++) {
       tempArray[k] = array[i];
+      k += 1;
     }
 
     for (let i = i2; i <= d; i++) {
       tempArray[k] = array[i];
+      k += 1;
     }
     tempArray.forEach((el, index) => {
       array[index] = el;

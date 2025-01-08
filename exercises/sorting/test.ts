@@ -1,4 +1,4 @@
-import { bubbleSort, insertionSort, merge, mergeSort, POitc, selectionSort } from './index'
+import { bubbleSort, insertionSort, merge, mergeSort, mergeSortInArray, POitc, selectionSort } from './index'
 function getArray() {
   return [100, -40, 500, -124, 0, 21, 7];
 }
@@ -43,5 +43,10 @@ describe('Merge sort', () => {
   });
   test('sorts an array using POitc function', () => {
     expect(POitc(getArray())).toEqual(getSortedArray());
+  });
+  test('Merge Sort using actionnal way in Array', () => {
+    const array = [...getArray()]
+    mergeSortInArray(array);
+    expect(array).toEqual(getSortedArray());
   });
 });
