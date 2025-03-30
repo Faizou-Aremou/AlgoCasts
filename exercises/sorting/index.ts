@@ -332,5 +332,4 @@ export function mergeSortInArray<T>(array: T[]) {
       array[index] = el;
     });
   }
-  TrierLtc([0, array.length - 1]);
 }
