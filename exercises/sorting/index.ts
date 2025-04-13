@@ -1,6 +1,6 @@
 // --- Directions
 // Implement bubbleSort, selectionSort, and mergeSort
-import { append, head, init, isEmpty, last, prepend, tail } from 'ramda';
+import { head, init, isEmpty, last, prepend, tail } from 'ramda';
 
 /**
  * insertionSort:: [T], fn -> [T]
@@ -282,55 +282,126 @@ function sort<T>([e1, e2]: [T, T]): [T, T] {
   return e1 > e2 ? [e2, e1] : [e1, e2];
 }
 
-export function mergeSortInArray<T>(array: T[]) {
+// export function mergeSortInArray<T>(array: T[]) {
+//   //TrierLtc([0, array.length - 1]);
+// }
+function interArrayClassification<T>(
+  array: T[],
+  [a, b]: [number, number],
+  [c, d]: [number, number]
+): void {
   let tempArray: T[] = [];
-  /**
-   * Tri interclassement sur les tableaux
-   * Solution actionnelle recursif issue de "11.3 Etude du d'un algorithme de tri recursif", a) page 257/258.
-   */
-  function TrierLtc([inf, sup]: [number, number]) {
-    let m: number;
-    if (inf < sup) {
-      const somme = inf + sup;
-      m = somme % 2 === 0 ? somme / 2 : (somme - 1) / 2;
-      TrierLtc([inf, m]);
-      TrierLtc([m + 1, sup]);
-      interArrayClassification([inf, m], [m + 1, sup]);
+  let i1: number, i2: number;
+  let k: number;
+  i1 = a;
+  i2 = c;
+  k = a;
+  while (i1 <= b && i2 <= d) {
+    if (array[i1] <= array[i2]) {
+      tempArray[k] = array[i1];
+      i1 += 1;
+    } else {
+      tempArray[k] = array[i2];
+      i2 += 1;
     }
+    k += 1;
   }
 
-  function interArrayClassification(
-    [a, b]: [number, number],
-    [c, d]: [number, number]
-  ): void {
-    let i1: number, i2: number;
-    let k: number;
-    i1 = a;
-    i2 = c;
-    k = a;
-    while (i1 <= b && i2 <= d) {
-      if (array[i1] <= array[i2]) {
-        tempArray[k] = array[i1];
-        i1 += 1;
-      } else {
-        tempArray[k] = array[i2];
-        i2 += 1;
-      }
-      k += 1;
-    }
-
-    for (let i = i1; i <= b; i++) {
-      tempArray[k] = array[i];
-      k += 1;
-    }
-
-    for (let i = i2; i <= d; i++) {
-      tempArray[k] = array[i];
-      k += 1;
-    }
-    tempArray.forEach((el, index) => {
-      array[index] = el;
-    });
+  for (let i = i1; i <= b; i++) {
+    tempArray[k] = array[i];
+    k += 1;
   }
-  TrierLtc([0, array.length - 1]);
+
+  for (let i = i2; i <= d; i++) {
+    tempArray[k] = array[i];
+    k += 1;
+  }
+  // tempArray.forEach((el, index) => {
+  //   array[index] = el;
+  // });
+  for (let i = a; i <= d; i++) {
+    array[i] = tempArray[i];
+  }
+}
+/**
+ * Tri interclassement sur les tableaux
+ * Solution actionnelle recursif issue de "11.3 Etude du d'un algorithme de tri recursif", a) page 257/258.
+ */
+export function mergeSortInArray<T>(
+  array: T[],
+  [inf, sup]: [number, number] = [0, array.length - 1]
+) {
+  let m: number;
+  if (inf < sup) {
+    const somme = inf + sup;
+    m = somme % 2 === 0 ? somme / 2 : (somme - 1) / 2;
+    mergeSortInArray(array, [inf, m]);
+    mergeSortInArray(array, [m + 1, sup]);
+    interArrayClassification(array, [inf, m], [m + 1, sup]);
+  }
+}
+
+function sortTableByFirstElement<T>(array: T[], [n, m]: [number, number]) {
+  let k = 1;
+  const size = m - n + 1;
+  let j = size - 1;
+  let tempArray: T[] = new Array<T>(size).fill(array[n]);
+  const head = array[n];
+  for (let i = n + 1; i <= m; i++) {
+    const current = array[i];
+    if (current <= head) {
+      tempArray[k] = current;
+      k++;
+    } else {
+      tempArray[j] = current;
+      j--;
+    }
+  }
+  let l = 0;
+  for (let i = n; i <= m; i++) {
+    array[i] = tempArray[l];
+    l++;
+  }
+}
+
+function interChange<T>(array: T[], [n, m]: [number, number]) {
+  let temp = array[n];
+  array[n] = array[m];
+  array[m] = temp;
+}
+/**
+ * n
+ * @param param0
+ */
+function reorder<T>(
+  array: T[],
+  [n, m]: [number, number],
+  mediumIndex: { index: number }
+) {
+  const head = array[n];
+  let i = n + 1;
+  while (array[i] <= head && i <= m) {
+    interChange(array, [i, i - 1]);
+    i++;
+  }
+  mediumIndex.index = i - 1;
+}
+/**
+ *  Quick sort encore appelé tri par partition. Il est rapide, mais pas très stable. Il n'est pas conseillé en milieu pro
+ */
+export function quickSortInArray<T>(
+  array: T[],
+  [n, m]: [number, number]
+): void {
+  if (m - n <= 1) {
+    if (array[n] > array[m]) {
+      interChange(array, [n, m]);
+    }
+  } else {
+    sortTableByFirstElement(array, [n, m]);
+    const indexMedium = { index: 0 };
+    reorder(array, [n, m], indexMedium);
+    quickSortInArray(array, [n, indexMedium.index - 1]);
+    quickSortInArray(array, [indexMedium.index + 1, m]);
+  }
 }
