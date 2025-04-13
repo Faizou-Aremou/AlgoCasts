@@ -7,7 +7,7 @@ export class Node {
   }
 }
 
-export class LinkedList {
+export class LinkedList { 
   head: any | null;
   constructor(values = []) {
     this.head = null;
@@ -169,11 +169,11 @@ export class LinkedList {
     }
   }
 
-  *[Symbol.iterator]() {
+  *[Symbol.iterator]() { 
     let node = this.head;
     while (node) {
       yield node;
-      node = node.next;
+      node = node.next; 
     }
   }
 }
